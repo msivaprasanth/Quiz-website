@@ -1,7 +1,5 @@
 Here's a **README.md** file for your **Quiz Website** project:  
 
----
-
 ### 📚 Quiz Website  
 
 A dynamic quiz platform featuring **randomized 20 questions** from a database across **multiple categories**. The website is built using **HTML, CSS, JavaScript, Bootstrap**, ensuring a responsive and interactive user experience. At the end of each quiz, a **performance graph** is displayed to visualize user results.  
@@ -26,6 +24,3 @@ A dynamic quiz platform featuring **randomized 20 questions** from a database ac
 2. Open `index.html` in a browser  
 3. Start playing the quiz!  
 
----
-
-Would you like to include any **backend details** if it's a full-stack project? 🚀
