@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #4d02a7, #d80660);
+            color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #222;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .question {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffc107;
+            margin-bottom: 40px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .option {
+            text-align: left;
+        }
+        .option label {
+            display: block;
+            background: #17a2b8;
+            font-weight: 600;
+            color: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            border: 2px solid transparent; /* Border for better visibility */
+        }
+        .option input[type="radio"] {
+            margin-right: 10px; /* Space between radio and label */
+        }
+        .btn {
+            font-size: 20px;
+            padding: 12px 24px;
+            border-radius: 10px;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+        @media (max-width: 576px) {
+            .question {
+                font-size: 24px;
+            }
+            .btn {
+                font-size: 18px;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question" id="question-text">{{ question[1] }}</div>
+        <div id="options-container" class="options-grid">
+            <!-- Options will be dynamically loaded here -->
+        </div>
+        <button id="next-btn" class="btn btn-primary">Next Question</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nextBtn = document.getElementById('next-btn');
+            const questionTextElement = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+
+            // Load question options from Flask
+            function loadQuestion(question) {
+                // Update question text
+                questionTextElement.innerText = question[1]; // Assuming question text is in the second column
+
+                // Clear previous options
+                optionsContainer.innerHTML = '';
+
+                // Create options dynamically
+                const optionValues = [question[2], question[3], question[4], question[5]];
+                optionValues.forEach((value, index) => {
+                    const optionWrapper = document.createElement('div'); // Wrapper for each option
+                    optionWrapper.classList.add('option');
+
+                    const label = document.createElement('label');
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'option';
+                    input.value = value;
+                    input.required = true; // Make sure an option is selected
+
+                    const span = document.createElement('span');
+                    span.classList.add('option-box'); // Styling class for options
+                    span.innerText = value;
+
+                    // Append the radio button and label to the option wrapper
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    optionWrapper.appendChild(label);
+
+                    // Add the option wrapper to the options container
+                    optionsContainer.appendChild(optionWrapper);
+                });
+            }
+
+            // Move to the next question when the button is clicked
+            nextBtn.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default form submission
+                const selectedOption = document.querySelector('input[name="option"]:checked');
+
+                if (selectedOption) {
+                    fetch('/next_question', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ selected_option: selectedOption.value })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.finished) {
+                            window.location.href = '/submit_quiz';
+                        } else {
+                            loadQuestion(data.question);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                } else {
+                    alert('Please select an option!');
+                }
+            });
+
+            // Initially load the first question
+            loadQuestion({{ question|tojson }});
+        });
+    </script>
+</body>
+</html>

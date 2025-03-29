@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
+        font-family: 'Arial', sans-serif;
+        color: #333;
+    }
+    .container {
+        text-align: center;
+        max-width: 400px;
+        padding: 30px;
+        border-radius: 20px;
+        background: #ffffff;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    }
+    .title {
+        font-size: 42px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #ff5e62;
+    }
+    .btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 8px;
+        background-color: #4285f4;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .btn:hover {
+        background-color: #3078e4;
+        transform: scale(1.05);
+    }
+    @media (max-width: 576px) {
+        h1 {
+            font-size: 32px;
+        }
+        .btn {
+            font-size: 16px;
+        }
+    }
+</style>
+<body>
+    <div class="container text-center mt-5">
+        <h1 class="title">Quick Quiz</h1>
+        <a id="start-btn" href="{{ url_for('start_quiz') }}" class="btn btn-primary mt-3">Start Quiz</a>
+    </div>
+</body>
+</html>
